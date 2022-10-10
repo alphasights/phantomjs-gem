@@ -49,20 +49,18 @@ module Phantomjs
         temp_dir = File.join(temp_path, 'phantomjs_install')
         FileUtils.rm_rf temp_dir
         FileUtils.mkdir_p temp_dir
+        packages_path = File.expand_path("../../../packages", __FILE__)
+        FileUtils.cp("#{packages_path}/#{package}", temp_dir)
 
         Dir.chdir temp_dir do
-          unless system "curl -L --retry 5 -O #{package_url}" or system "wget -t 5 #{package_url}"
-            raise "\n\nFailed to load phantomjs! :(\nYou need to have cURL or wget installed on your system.\nIf you have, the source of phantomjs might be unavailable: #{package_url}\n\n"
-          end
-
-          case package_url.split('.').last
+          case package.split('.').last
             when 'bz2'
-              system "bunzip2 #{File.basename(package_url)}"
-              system "tar xf #{File.basename(package_url).sub(/\.bz2$/, '')}"
+              system "bunzip2 #{File.basename(package)}"
+              system "tar xf #{File.basename(package).sub(/\.bz2$/, '')}"
             when 'zip'
-              system "unzip #{File.basename(package_url)}"
+              system "unzip #{File.basename(package)}"
             else
-              raise "Unknown compression format for #{File.basename(package_url)}"
+              raise "Unknown compression format for #{File.basename(package)}"
           end
 
           # Find the phantomjs build we just extracted
@@ -97,8 +95,8 @@ module Phantomjs
           'x86_64-linux'
         end
 
-        def package_url
-          'https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2'
+        def package
+          'phantomjs-2.1.1-linux-x86_64.tar.bz2'
         end
       end
     end
@@ -113,8 +111,8 @@ module Phantomjs
           'x86_32-linux'
         end
 
-        def package_url
-          'https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-i686.tar.bz2'
+        def package
+          'phantomjs-2.1.1-linux-i686.tar.bz2'
         end
       end
     end
@@ -129,8 +127,8 @@ module Phantomjs
           'darwin'
         end
 
-        def package_url
-          'https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip'
+        def package
+          'phantomjs-2.1.1-macosx.zip'
         end
       end
     end
@@ -153,8 +151,8 @@ module Phantomjs
           end
         end
 
-        def package_url
-          'https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip'
+        def package
+          'phantomjs-2.1.1-windows.zip'
         end
       end
     end
